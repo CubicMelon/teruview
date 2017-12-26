@@ -1,0 +1,8 @@
+Punch (left-click) a node to see its name and the mod it comes from. Additionally, it lists effective tools in mining the node as well as other information (such as whether it has gravity or is flammable).
+
+When a node does not have a set description, its ID is displayed instead in an alternate color.
+
+The information box remains on-screen for a limited time after punching and the time can be adjusted.
+See options.lua in the mod directory for settings.
+
+By Terumoc, provided under the GNU GPL v3.0 (https://choosealicense.com/licenses/gpl-3.0/)
