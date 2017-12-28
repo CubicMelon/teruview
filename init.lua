@@ -110,18 +110,28 @@ function teruview.update_view(pos, node, player, pointed_thing)
             local wielded_data = minetest.registered_items[player:get_wielded_item():get_name()]
             update.tools = ''
             update.tools_color = teruview.view_tool_mismatch
-            for grp, level in pairs(node_data.groups) do
+            update.required_level = 0
+            if node_data.groups and node_data.groups.level then
+                update.required_level = node_data.groups.level
+                update.tools_color = teruview.view_tool_low_level
+            end
+            for grp, rating in pairs(node_data.groups) do
                 if teruview.info_node_groups[grp] then
                     update.flags = teruview.info_node_groups[grp] .. ' ' .. update.flags
                     update.flags_color = teruview.view_node_info
                 end
                 if teruview.tool_node_groups[grp] then
-                    if wielded_data and wielded_data.tool_capabilities and wielded_data.tool_capabilities.groupcaps and wielded_data.tool_capabilities.groupcaps[grp] then
+                    if wielded_data and 
+                        wielded_data.tool_capabilities and 
+                        wielded_data.tool_capabilities.groupcaps and 
+                        wielded_data.tool_capabilities.groupcaps[grp] and
+                        wielded_data.tool_capabilities.groupcaps[grp].maxlevel >= update.required_level then
                         update.tools_color = teruview.view_tool_match
                     end
-                    update.tools = teruview.tool_node_groups[grp] .. ':' .. (teruview.tool_group_level_description[node_data.groups[grp]] or 'Unk.') .. ' ' .. update.tools
+                    update.tools = teruview.tool_node_groups[grp] .. ':' .. (teruview.tool_group_rating_description[rating] or 'Unk.') .. ' ' .. update.tools
                 end
             end
+            update.tools = teruview.tool_group_level_description .. update.required_level .. ' ' .. update.tools
         else
             -- case that there is no registered data for node
             update.name = node.name

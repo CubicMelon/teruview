@@ -51,17 +51,21 @@ teruview.view_color_node_id = 0xFFFF00
 -- Text color for mod name
 teruview.view_color_modname = 0x6ea8ff
 
--- Text color for when current tool level matches type
-teruview.view_tool_match = 0x8bffbc
+-- Text color for when current tool level matches type and has sufficient level
+teruview.view_tool_match = 0x8BFFBC
 -- Text color for when current tool does not match node type
-teruview.view_tool_mismatch = 0xFFC78B
+teruview.view_tool_mismatch = 0xFFECAA
+-- Text color for when current tool cannot mine node due to insufficient level
+teruview.view_tool_low_level = 0xF93131
 -- Text color for when node has no tools defined
 teruview.view_tool_none = 0xA0A0A0
 
 -- Text color for node flags
 teruview.view_node_info = 0xC0C0C0
 
--- Text for describing node group "levels". In vanilla minetest, group 1 is slowest and group 3 is fastest to dig/mine.
-teruview.tool_group_level_description = {
+-- Text for describing node level
+teruview.tool_group_level_description = 'Level:'
+-- Text for describing node group "rating". In vanilla minetest, rating 1 is slowest and rating  3 is fastest to dig/mine.
+teruview.tool_group_rating_description = {
     'Slow', 'Avg.', 'Fast'
 }
