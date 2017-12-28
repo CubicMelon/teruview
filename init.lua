@@ -1,8 +1,8 @@
 
 teruview = {}
-teruview.version = {1, 0, 0}
+teruview.version = {major=1, minor=1, patch=0}
 local ver = teruview.version
-teruview.version_text = ver[1] .. '.' .. ver[2] .. '.' .. ver[3]
+teruview.version_text = ver.major .. '.' .. ver.minor .. '.' .. ver.patch
 teruview.mod_name = 'teruview'
 
 dofile(minetest.get_modpath(teruview.mod_name) .. '/options.lua')
