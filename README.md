@@ -11,7 +11,7 @@ If the node has a description, it is displayed in white. If not, its ID is inste
 ### Line 2: Originating Mod
 The mod which owns the node definition is displayed in light blue.
 ### Line 3: Tool Information
-The node's level and defined tool types for mining it are displayed. The color of this information is dependent on your currently equipped tool:
+The node's level and defined tool types for mining it are displayed. The color of this information is dependent on your currently held tool:
 - Green: Current tool is optimum for mining this node.
 - Yellow: Current tool can mine this node, but it is not an optimum tool to do so.
 - Red: Current tool is too low level to mine this node at all.
