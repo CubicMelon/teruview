@@ -1,10 +1,23 @@
 -- Teruview v1.1.0
 
 -- Mod for open-source voxel game Minetest (https://www.minetest.net/)
+-- Written for Minetest version 0.4.16
 -- Provides in-game information on blocks in the world by clicking/punching them
 
--- by Terumoc (Scott Horvath) and provided under the GNU GENERAL PUBLIC LICENSE v3 
--- as described in the file "LICENSE" which should be available with the source code of this mod.
+--[[ Copyright (C) 2017-2018 Terumoc (Scott Horvath)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>. ]]
 
 teruview = {}
 teruview.version = {major=1, minor=1, patch=0}
