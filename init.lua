@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. ]]
 
 teruview = {}
-teruview.version = {major=1, minor=2, patch=0}
+teruview.version = {major=1, minor=2, patch=1}
 local ver = teruview.version
 teruview.version_text = ver.major .. '.' .. ver.minor .. '.' .. ver.patch
 teruview.mod_name = 'teruview'
@@ -159,7 +159,7 @@ function teruview.update_view(pos, node, player, pointed_thing)
                     update.tools = teruview.tool_node_groups[grp] .. ':' .. (teruview.tool_group_rating_description[rating] or 'Unk.') .. ' ' .. update.tools
                 end
             end
-            update.tools = teruview.tool_group_level_description .. update.required_level .. ' ' .. update.tools
+            if update.required_level > 0 then update.tools = teruview.tool_group_level_description .. update.required_level .. ' ' .. update.tools end
         else
             -- case that there is no registered data for node
             update.name = node.name
