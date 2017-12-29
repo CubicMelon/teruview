@@ -1,4 +1,4 @@
--- Teruview v1.1.0
+-- Teruview v1.2.0
 
 -- Mod for open-source voxel game Minetest (https://www.minetest.net/)
 -- Written for Minetest version 0.4.16
@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. ]]
 
 teruview = {}
-teruview.version = {major=1, minor=1, patch=0}
+teruview.version = {major=1, minor=2, patch=0}
 local ver = teruview.version
 teruview.version_text = ver.major .. '.' .. ver.minor .. '.' .. ver.patch
 teruview.mod_name = 'teruview'
@@ -127,13 +127,13 @@ function teruview.update_view(pos, node, player, pointed_thing)
                 update.name_color = teruview.view_color_node_id
             end
             -- read and parse node groups (for listing tools and flags)
-            local wielded_data = minetest.registered_items[player:get_wielded_item():get_name()]
+            local player_tool_caps = player:get_wielded_item():get_tool_capabilities()
+            --minetest.chat_send_all(dump(wielded_data))
             update.tools = ''
-            update.tools_color = teruview.view_tool_mismatch
+            update.tools_color = teruview.view_tool_unable
             update.required_level = 0
             if node_data.groups and node_data.groups.level then
                 update.required_level = node_data.groups.level
-                update.tools_color = teruview.view_tool_low_level
             end
             for grp, rating in pairs(node_data.groups) do
                 if teruview.info_node_groups[grp] then
@@ -141,12 +141,20 @@ function teruview.update_view(pos, node, player, pointed_thing)
                     update.flags_color = teruview.view_node_info
                 end
                 if teruview.tool_node_groups[grp] then
-                    if wielded_data and 
-                        wielded_data.tool_capabilities and 
-                        wielded_data.tool_capabilities.groupcaps and 
-                        wielded_data.tool_capabilities.groupcaps[grp] and
-                        wielded_data.tool_capabilities.groupcaps[grp].maxlevel >= update.required_level then
-                        update.tools_color = teruview.view_tool_match
+                    if (update.tools_color ~= teruview.view_tool_able) then
+                        if player_tool_caps.groupcaps and player_tool_caps.groupcaps[grp] then
+                            local groupcaps = player_tool_caps.groupcaps[grp]
+                            if groupcaps.times[rating] then
+                                local level = groupcaps.maxlevel or 0
+                                if level >= update.required_level then
+                                    update.tools_color = teruview.view_tool_able
+                                else
+                                    update.tools_color = teruview.view_tool_insuff
+                                end
+                            else
+                                update.tools_color = teruview.view_tool_insuff
+                            end
+                        end
                     end
                     update.tools = teruview.tool_node_groups[grp] .. ':' .. (teruview.tool_group_rating_description[rating] or 'Unk.') .. ' ' .. update.tools
                 end

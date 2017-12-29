@@ -52,11 +52,11 @@ teruview.view_color_node_id = 0xFFFF00
 teruview.view_color_modname = 0x6ea8ff
 
 -- Text color for when current tool level matches type and has sufficient level
-teruview.view_tool_match = 0x8BFFBC
+teruview.view_tool_able = 0x8BFFBC
+-- Text color for when current tool matches node type but is too low level or lacks a speed for node's rating
+teruview.view_tool_insuff = 0xFF8B31
 -- Text color for when current tool does not match node type
-teruview.view_tool_mismatch = 0xFFECAA
--- Text color for when current tool cannot mine node due to insufficient level
-teruview.view_tool_low_level = 0xF93131
+teruview.view_tool_unable = 0xF93131
 -- Text color for when node has no tools defined
 teruview.view_tool_none = 0xA0A0A0
 
