@@ -57,8 +57,6 @@ teruview.view_tool_able = 0x8BFFBC
 teruview.view_tool_insuff = 0xFF8B31
 -- Text color for when current tool does not match node type
 teruview.view_tool_unable = 0xF93131
--- Text color for when node has no tools defined
-teruview.view_tool_none = 0xA0A0A0
 
 -- Text color for node flags
 teruview.view_node_info = 0xC0C0C0

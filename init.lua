@@ -1,4 +1,4 @@
--- Teruview v1.2.0
+-- Teruview v1.2
 
 -- Mod for open-source voxel game Minetest (https://www.minetest.net/)
 -- Written for Minetest version 0.4.16
@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. ]]
 
 teruview = {}
-teruview.version = {major=1, minor=2, patch=1}
+teruview.version = {major=1, minor=2, patch=2}
 local ver = teruview.version
 teruview.version_text = ver.major .. '.' .. ver.minor .. '.' .. ver.patch
 teruview.mod_name = 'teruview'
@@ -102,6 +102,32 @@ function private.section_update(player, hud_elem, text, text_color)
     player:hud_change(hud_elem, 'number', text_color)
 end
 
+-- returns color to display for using this tool to dig given node
+function teruview.rate_tool_for_node(node_data, tool_caps)
+    if not tool_caps.groupcaps then return teruview.view_tool_unable end
+    local tool_color = teruview.view_tool_unable
+    local required_level = 0
+    if node_data.groups and node_data.groups.level then
+        required_level = node_data.groups.level
+    end
+    for grp, rating in pairs(node_data.groups) do
+        if tool_caps.groupcaps[grp] then
+            local groupcaps = tool_caps.groupcaps[grp]
+            if groupcaps.times[rating] then
+                local level = groupcaps.maxlevel or 0
+                if level >= required_level then
+                    return teruview.view_tool_able
+                else
+                    tool_color = teruview.view_tool_insuff
+                end
+            else
+                tool_color = teruview.view_tool_insuff
+            end
+        end
+    end
+    return tool_color
+end
+
 function teruview.update_view(pos, node, player, pointed_thing)
     local hud_data = teruview.get_hud_data(player)
     local update = {}
@@ -109,8 +135,8 @@ function teruview.update_view(pos, node, player, pointed_thing)
     update.mod = '<none>'
     update.name_color = teruview.view_color_nothing
     update.mod_color = teruview.view_color_undefined
-    update.tools = '<no tools>'
-    update.tools_color = teruview.view_tool_none
+    update.tools = ''
+    update.tools_color = teruview.view_color_nothing
     update.flags = ''
     update.flags_color = teruview.view_color_nothing
     if node then
@@ -127,39 +153,25 @@ function teruview.update_view(pos, node, player, pointed_thing)
                 update.name_color = teruview.view_color_node_id
             end
             -- read and parse node groups (for listing tools and flags)
-            local player_tool_caps = player:get_wielded_item():get_tool_capabilities()
-            --minetest.chat_send_all(dump(wielded_data))
-            update.tools = ''
-            update.tools_color = teruview.view_tool_unable
-            update.required_level = 0
-            if node_data.groups and node_data.groups.level then
-                update.required_level = node_data.groups.level
-            end
+            local node_level = 0
             for grp, rating in pairs(node_data.groups) do
                 if teruview.info_node_groups[grp] then
                     update.flags = teruview.info_node_groups[grp] .. ' ' .. update.flags
                     update.flags_color = teruview.view_node_info
                 end
                 if teruview.tool_node_groups[grp] then
-                    if (update.tools_color ~= teruview.view_tool_able) then
-                        if player_tool_caps.groupcaps and player_tool_caps.groupcaps[grp] then
-                            local groupcaps = player_tool_caps.groupcaps[grp]
-                            if groupcaps.times[rating] then
-                                local level = groupcaps.maxlevel or 0
-                                if level >= update.required_level then
-                                    update.tools_color = teruview.view_tool_able
-                                else
-                                    update.tools_color = teruview.view_tool_insuff
-                                end
-                            else
-                                update.tools_color = teruview.view_tool_insuff
-                            end
-                        end
-                    end
                     update.tools = teruview.tool_node_groups[grp] .. ':' .. (teruview.tool_group_rating_description[rating] or 'Unk.') .. ' ' .. update.tools
                 end
+                if grp == 'level' then node_level = rating end
             end
-            if update.required_level > 0 then update.tools = teruview.tool_group_level_description .. update.required_level .. ' ' .. update.tools end
+            if node_level > 0 then update.tools = teruview.tool_group_level_description .. node_level .. ' ' .. update.tools end
+            -- determine tool capability for node
+            local player_tool_caps = player:get_wielded_item():get_tool_capabilities()
+            update.tools_color = teruview.rate_tool_for_node(node_data, player_tool_caps)
+            if update.tools_color ~= teruview.view_tool_able then
+                -- if tool does not work, test implicit hand tool as well
+                update.tools_color = teruview.rate_tool_for_node(node_data, minetest.registered_items[''].tool_capabilities)
+            end
         else
             -- case that there is no registered data for node
             update.name = node.name
