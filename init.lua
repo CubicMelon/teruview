@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. ]]
 
 teruview = {}
-teruview.version = {major=1, minor=2, patch=2}
+teruview.version = {major=1, minor=2, patch=3}
 local ver = teruview.version
 teruview.version_text = ver.major .. '.' .. ver.minor .. '.' .. ver.patch
 teruview.mod_name = 'teruview'
@@ -98,7 +98,7 @@ function teruview.init_hud_data(player)
 end
 
 function private.section_update(player, hud_elem, text, text_color)
-    player:hud_change(hud_elem, 'text', text)
+    player:hud_change(hud_elem, 'text', text or '')
     player:hud_change(hud_elem, 'number', text_color)
 end
 
